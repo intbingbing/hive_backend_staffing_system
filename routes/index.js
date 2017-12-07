@@ -27,7 +27,6 @@ router.get('/', function(req, res) {
 });
 
 router.get('/idquery', function(req, res) {
-    let jsondata;
     let idqueryresult='未查询到数据！';
     let idqueryvalue;
     if(isNaN(parseInt(req.query.id))){
