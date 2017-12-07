@@ -15,6 +15,7 @@
     "serve-favicon": "~2.4.5"
   },
   "devDependencies": {
+    "flatpickr": "^4.1.4",
     "hotnode": "^0.0.8",
     "mysql": "^2.15.0"
   }

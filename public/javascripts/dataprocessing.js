@@ -26,7 +26,7 @@ let addsubmit=function(){
     if(namesubmitvalue&&passwordsubmitvalue&&birthdaysubmitvalue){
         data='name='+namesubmitvalue+'&'+'password='+passwordsubmitvalue+'&'+'birthday='+birthdaysubmitvalue;
     }else{
-        document.getElementById('addsubmitresult').innerHTML='数据未填写完整！'；
+        document.getElementById('addsubmitresult').innerHTML='数据未填写完整！';
         return 0;
     }
     let xmlhttp=new XMLHttpRequest();
