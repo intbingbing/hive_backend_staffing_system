@@ -1,6 +1,3 @@
-let flatpickr=require('flatpickr');
-require("flatpickr/dist/themes/material_green.css");
-
 let idquery=function(){
         let idqueryvalue=document.getElementById('idqueryvalue').value;
         let idqueryresult=document.getElementById('idqueryresult');
