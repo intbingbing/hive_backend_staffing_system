@@ -20,13 +20,16 @@ let entersubmit=function(){
 }
 
 let addsubmit=function(){
-    let idsubmitvalue=document.getElementById('idsubmitvalue').value;
     let namesubmitvalue=document.getElementById('namesubmitvalue').value;
     let passwordsubmitvalue=document.getElementById('passwordsubmitvalue').value;
-    let professionsubmitvalue=document.getElementById('professionsubmitvalue').value;
-    data='id='+idsubmitvalue+'&'+'name='+namesubmitvalue+'&'+'password='+passwordsubmitvalue+'&'+'profession='+professionsubmitvalue;
+    let birthdaysubmitvalue=document.getElementById('birthdaysubmitvalue').value;
+    if(namesubmitvalue&&passwordsubmitvalue&&birthdaysubmitvalue){
+        data='name='+namesubmitvalue+'&'+'password='+passwordsubmitvalue+'&'+'birthday='+birthdaysubmitvalue;
+    }else{
+        document.getElementById('addsubmitresult').innerHTML='数据未填写完整！'；
+        return 0;
+    }
     let xmlhttp=new XMLHttpRequest();
-    xmlhttp.open('POST','addsubmit');
     xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
     xmlhttp.send(data);
     xmlhttp.onreadystatechange=function(){
