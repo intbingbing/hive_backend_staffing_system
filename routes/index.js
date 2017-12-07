@@ -1,9 +1,16 @@
-var express = require('express');
-var path=require('path');
-var router = express.Router();
-var fs=require('fs');
-var util=require('util');
+let express = require('express');
+let path=require('path');
+let router = express.Router();
+let fs=require('fs');
+let mysql=require('mysql');
 /* GET home page. */
+
+let connection=mysql.createConnection({
+    host:'localhost',
+    user:'root',
+    password:'123456',
+    database:'test'
+});
 
 router.use(function(req,res,next){
     res.set({
@@ -20,21 +27,29 @@ router.get('/', function(req, res) {
 });
 
 router.get('/idquery', function(req, res) {
-    idqueryvalue=parseInt(req.query.id);
     let jsondata;
     let idqueryresult='未查询到数据！';
-    jsondata=JSON.parse(fs.readFileSync('./sql.json','utf8'));
-    for(let key in jsondata){
-      if(jsondata[key].id===idqueryvalue){
-          idqueryresult='ID:'+jsondata[key].id+'   姓名:'+jsondata[key].name+'   密码:'+jsondata[key].password+'   职业:'+jsondata[key].profession;
-          return res.send(idqueryresult);
-      }
+    let idqueryvalue;
+    if(isNaN(parseInt(req.query.id))){
+        return res.send('格式错误！')
+    }else{
+        idqueryvalue=parseInt(req.query.id);
     }
-    res.send(idqueryresult);
+    connection.connect();
+    let idquerysqlway='SELECT * FROM user WHERE ID='+idqueryvalue;
+    connection.query(idquerysqlway,function(err,result){
+        if(result.length===1){
+            idqueryresult='ID:'+result[0].ID+'   姓名:'+result[0].name+'   密码:'+result[0].password+'   生日:'+result[0].birthday;
+            connection.end();
+            return res.send(idqueryresult);
+        }else{
+            connection.end();
+            return res.send(idqueryresult);
+        }
+    });
 });
 
 router.post('/addsubmit',function(req,res){
-    
     res.send(req.body);
 })
 
