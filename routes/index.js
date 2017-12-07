@@ -27,12 +27,7 @@ router.get('/', function(req, res) {
 // get查询
 router.get('/idquery', function(req, res) {
     let idqueryresult='未查询到数据！';
-    let idqueryvalue;
-    if(isNaN(parseInt(req.query.id))){
-        return res.send('格式错误！')
-    }else{
-        idqueryvalue=parseInt(req.query.id);
-    }
+    let idqueryvalue=parseInt(req.query.id);
     let idquerysqlway='SELECT * FROM user WHERE ID='+idqueryvalue;
     connection.query(idquerysqlway,function(err,result){
         if(result.length===1){

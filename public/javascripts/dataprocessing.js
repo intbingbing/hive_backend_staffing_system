@@ -1,5 +1,9 @@
 let idquery=function(){
         let idqueryvalue=document.getElementById('idqueryvalue').value;
+        if(isNaN(parseInt(idqueryvalue))){
+            document.getElementById('idqueryresult').innerHTML='格式错误！';
+            return 0;
+        }
         let idqueryresult=document.getElementById('idqueryresult');
         let xmlhttp=new XMLHttpRequest();
         xmlhttp.open('GET','idquery?id='+idqueryvalue,true);
