@@ -40,7 +40,18 @@ router.get('/idquery', function(req, res) {
 });
 // post增加
 router.post('/addsubmit',function(req,res){
-    res.send(req.body);
+    let  addSql = 'INSERT INTO user(name,birthday,password)VALUES(?,?,?)';
+    let  addSqlArr = [req.body.name,req.body.password,req.body.birthday];
+    connection.query(addSql,addSqlArr,function (err, result) {
+        if(err){
+            console.log('[SELECT ERROR]:',err.message);
+            res.send('服务器内部错误！');
+            return;
+        }
+        let addsubmitresult='ID:'+result.insertId+' Name:'+req.body.name;
+        res.send(addsubmitresult);
+    });
+
 })
 
 module.exports = router;
