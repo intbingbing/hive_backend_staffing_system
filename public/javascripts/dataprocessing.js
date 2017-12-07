@@ -30,6 +30,7 @@ let addsubmit=function(){
         return 0;
     }
     let xmlhttp=new XMLHttpRequest();
+    xmlhttp.open('POST','addsubmit',true);
     xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
     xmlhttp.send(data);
     xmlhttp.onreadystatechange=function(){
