@@ -1,7 +1,6 @@
 let express = require('express');
 let path=require('path');
 let router = express.Router();
-let fs=require('fs');
 let mysql=require('mysql');
 /* GET home page. */
 
@@ -25,7 +24,7 @@ router.get('/', function(req, res) {
     let indexpath=path.resolve(__dirname, '../public/page');
     res.sendFile(indexpath+'/index.html');
 });
-
+// get查询
 router.get('/idquery', function(req, res) {
     let idqueryresult='未查询到数据！';
     let idqueryvalue;
@@ -44,7 +43,7 @@ router.get('/idquery', function(req, res) {
         }
     });
 });
-
+// post增加
 router.post('/addsubmit',function(req,res){
     res.send(req.body);
 })
