@@ -41,7 +41,7 @@ router.get('/idquery', function(req, res) {
 // post增加
 router.post('/addsubmit',function(req,res){
     let  addSql = 'INSERT INTO user(name,birthday,password)VALUES(?,?,?)';
-    let  addSqlArr = [req.body.name,req.body.password,req.body.birthday];
+    let  addSqlArr = [req.body.name,req.body.birthday,req.body.password];
     connection.query(addSql,addSqlArr,function (err, result) {
         if(err){
             console.log('[SELECT ERROR]:',err.message);
