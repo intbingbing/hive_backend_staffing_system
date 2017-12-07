@@ -19,12 +19,6 @@ let entersubmit=function(){
     event.keyCode===13?idquery():false;
 }
 
-document.getElementById("birthdaysubmitvalue").flatpickr({
-    minDate:'1900-01-01',
-    maxDate:'today',
-    defaultDate:'1990-01-01'
-});
-
 let addsubmit=function(){
     let namesubmitvalue=document.getElementById('namesubmitvalue').value;
     let passwordsubmitvalue=document.getElementById('passwordsubmitvalue').value;
