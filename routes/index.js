@@ -11,7 +11,7 @@ let connection=mysql.createConnection({
     password:'123456',
     database:'test'
 });
-
+connection.connect();
 router.use(function(req,res,next){
     res.set({
         "Cache-Control":"no-cache",
@@ -34,15 +34,12 @@ router.get('/idquery', function(req, res) {
     }else{
         idqueryvalue=parseInt(req.query.id);
     }
-    connection.connect();
     let idquerysqlway='SELECT * FROM user WHERE ID='+idqueryvalue;
     connection.query(idquerysqlway,function(err,result){
         if(result.length===1){
             idqueryresult='ID:'+result[0].ID+'   姓名:'+result[0].name+'   密码:'+result[0].password+'   生日:'+result[0].birthday;
-            connection.end();
             return res.send(idqueryresult);
         }else{
-            connection.end();
             return res.send(idqueryresult);
         }
     });
