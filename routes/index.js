@@ -31,7 +31,8 @@ router.get('/idquery', function(req, res) {
     let idquerysqlway='SELECT * FROM user WHERE ID='+idqueryvalue;
     connection.query(idquerysqlway,function(err,result){
         if(result.length===1){
-            idqueryresult='ID:'+result[0].ID+'   姓名:'+result[0].name+'   密码:'+result[0].password+'   生日:'+result[0].birthday;
+            let birthdayformat=new Date(result[0].birthday).getFullYear()+'-'+new Date(result[0].birthday).getMonth()+'-'+new Date(result[0].birthday).getDay();
+            idqueryresult='ID:'+result[0].ID+'   姓名:'+result[0].name+'   密码:'+result[0].password+'   生日:'+birthdayformat;
             return res.send(idqueryresult);
         }else{
             return res.send(idqueryresult);
