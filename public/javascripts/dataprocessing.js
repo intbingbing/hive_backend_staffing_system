@@ -58,7 +58,7 @@ let update=function(){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
         return 0;
     }else if(nameupdatevalue&&passwordupdatevalue&&birthdayupdatevalue){
-        data='name='+nameupdatevalue+'&'+'password='+passwordupdatevalue+'&'+'birthday='+birthdayupdatevalue;
+        data='id='+idupdatevalue+'&name='+nameupdatevalue+'&password='+passwordupdatevalue+'&birthday='+birthdayupdatevalue;
     }else{
         document.getElementById('updateresult').innerHTML='请填写完整！';
         return 0;

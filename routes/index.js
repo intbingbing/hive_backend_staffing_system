@@ -59,12 +59,17 @@ router.post('/update',function (req,res) {
     let nameupdatevalue=req.body.name;
     let passwordupdatevalue=req.body.password;
     let birthdayupdatevalue=req.body.birthday;
-    let tmp='';
-    let switchname=0,switchpassword=0,switchbirthday=0;
-    let updateSqlArr=[];
-    let i=0;
-    res.send(req.body);
-    let updateSql='UPDATE user SET name = ?,url = ? WHERE Id = ?';
+    let updateSql='UPDATE user SET name = ?,password = ? ,birthday= ? WHERE ID = ?';
+    let updateSqlArr=[nameupdatevalue,passwordupdatevalue,birthdayupdatevalue,idupdatevalue];
+    connection.query(updateSql,updateSqlArr,function (err, result) {
+        if(err){
+            console.log('[SELECT ERROR]:',err.message);
+            res.send('服务器内部错误！');
+            return;
+        }
+        let updateresult='ID:'+result.insertId+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
+        res.send(updateresult);
+    });
 })
 
 module.exports = router;
