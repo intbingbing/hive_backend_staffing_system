@@ -1,28 +1,27 @@
-let idquery;
-idquery = function () {
-    let idqueryvalue = document.getElementById('idqueryvalue').value;
-    if (isNaN(parseInt(idqueryvalue))) {
-        document.getElementById('idqueryresult').innerHTML = '格式错误！';
-        return 0;
-    }
-    let idqueryresult = document.getElementById('idqueryresult');
-    let xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('GET', 'idquery?id=' + idqueryvalue, true);
-    xmlhttp.send();
-    xmlhttp.onreadystatechange = function () {
-        if (xmlhttp.readyState === 4) {
-            if (xmlhttp.status === 200) {
-                idqueryresult.innerHTML = xmlhttp.responseText;
-            } else {
-                console.log('ERROR:' + 'status:' + xmlhttp.status + ',' + 'state:' + xmlhttp.readyState);
+let idquery=function(){
+        let idqueryvalue=document.getElementById('idqueryvalue').value;
+        if(isNaN(parseInt(idqueryvalue))){
+            document.getElementById('idqueryresult').innerHTML='格式错误！';
+            return 0;
+        }
+        let idqueryresult=document.getElementById('idqueryresult');
+        let xmlhttp=new XMLHttpRequest();
+        xmlhttp.open('GET','idquery?id='+idqueryvalue,true);
+        xmlhttp.send();
+        xmlhttp.onreadystatechange=function(){
+            if(xmlhttp.readyState===4){
+                if(xmlhttp.status===200){
+                    idqueryresult.innerHTML=xmlhttp.responseText;
+                }else{
+                    console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
+                }
             }
         }
     }
-};
 
 let entersubmit=function(){
     event.keyCode===13?idquery():false;
-};
+}
 
 let addsubmit=function(){
     let namesubmitvalue=document.getElementById('namesubmitvalue').value;
@@ -48,9 +47,9 @@ let addsubmit=function(){
         }
     }
 
-};
+}
 
-let update=function(){
+let update(){
     let idupdatevalue=document.getElementById('idupdatevalue').value;
     let nameupdatevalue=document.getElementById('nameupdatevalue').value;
     let passwordupdatevalue=document.getElementById('passwordupdatevalue').value;
@@ -74,10 +73,10 @@ let update=function(){
     xmlhttp.onreadystatechange=function(){
         if(xmlhttp.readyState===4){
             if(xmlhttp.status===200){
-                document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！';
+                document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！'
             }else{
                 console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
             }
         }
     }
-};
+}
