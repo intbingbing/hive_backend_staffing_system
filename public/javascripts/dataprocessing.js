@@ -49,7 +49,7 @@ let addsubmit=function(){
 
 }
 
-let update(){
+let update=function(){
     let idupdatevalue=document.getElementById('idupdatevalue').value;
     let nameupdatevalue=document.getElementById('nameupdatevalue').value;
     let passwordupdatevalue=document.getElementById('passwordupdatevalue').value;
