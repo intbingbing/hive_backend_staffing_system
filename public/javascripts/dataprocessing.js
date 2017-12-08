@@ -73,7 +73,7 @@ let update(){
     xmlhttp.onreadystatechange=function(){
         if(xmlhttp.readyState===4){
             if(xmlhttp.status===200){
-                document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！'
+                document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！';
             }else{
                 console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
             }
