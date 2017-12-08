@@ -75,7 +75,7 @@ let update(){
             if(xmlhttp.status===200){
                 document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！';
             }else{
-                console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
+                console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState)
             }
         }
     }
