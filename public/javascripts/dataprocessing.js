@@ -40,16 +40,15 @@ let addsubmit=function(){
     xmlhttp.onreadystatechange=function(){
         if(xmlhttp.readyState===4){
             if(xmlhttp.status===200){
-                document.getElementById('addsubmitresult').innerHTML='【数据已增加】：'+xmlhttp.responseText+'！'
+                document.getElementById('addsubmitresult').innerHTML='【数据已增加】：'+xmlhttp.responseText+'！';
             }else{
                 console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
             }
         }
     }
+};
 
-}
-
-let update(){
+let update=function(){
     let idupdatevalue=document.getElementById('idupdatevalue').value;
     let nameupdatevalue=document.getElementById('nameupdatevalue').value;
     let passwordupdatevalue=document.getElementById('passwordupdatevalue').value;
