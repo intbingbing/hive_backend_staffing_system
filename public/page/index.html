@@ -10,9 +10,9 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
     <script type="text/javascript" src="../javascripts/dataprocessing.js"></script>
     <!--引入bootstrap4 js-->
-    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <!--<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>-->
+    <!--<script src="https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>-->
     <!--引入flatpickr时间选择器-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
@@ -33,7 +33,7 @@
         <div class="input-group">
             <input type="text" class="form-control" placeholder="请输入ID..." aria-label="Search for..." id='idqueryvalue' onkeydown="entersubmit()">
             <span class="input-group-btn">
-                    <button class="btn btn-secondary" type="button" id="idquery" >Query</button>
+                    <button class="btn btn-secondary" type="button" id="idquery" onclick="idquery()">Query</button>
                 </span>
         </div>
     </div>
@@ -96,21 +96,21 @@
 </div>
 
 <script>
-//    document.getElementById("birthdaysubmitvalue").flatpickr({
-//        minDate:'1900-01-01',
-//        maxDate:'today',
-//        defaultDate:'1990-01-01'
-//    });
-    $(function () {
-        $('#birthdaysubmitvalue,#birthdayupdatevalue').flatpickr({
-            minDate:'1900-01-01',
-            maxDate:'today',
-            defaultDate:'1990-01-01'
-        })
-    })
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-    })
+    document.getElementById("birthdaysubmitvalue,birthdayupdatevalue").flatpickr({
+        minDate:'1900-01-01',
+        maxDate:'today',
+        defaultDate:'1990-01-01'
+    });
+//    $(function () {
+//        $('#birthdaysubmitvalue,#birthdayupdatevalue').flatpickr({
+//            minDate:'1900-01-01',
+//            maxDate:'today',
+//            defaultDate:'1990-01-01'
+//        })
+//    })
+//    $(function () {
+//        $('[data-toggle="tooltip"]').tooltip()
+//    })
 </script>
 </body>
 </html>
