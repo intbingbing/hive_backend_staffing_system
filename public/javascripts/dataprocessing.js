@@ -78,7 +78,7 @@ let update=function(){
     }
 }
 
-let delete=function(){
+let iddelete=function(){
     let iddeletervalue=document.getElementById('iddeletervalue').value;
     if(isNaN(parseInt(idupdatevalue))){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
@@ -86,7 +86,7 @@ let delete=function(){
     }
     data='id='+iddeletervalue;
     let xmlhttp=new XMLHttpRequest();
-    xmlhttp.open('POST','/delete',true);
+    xmlhttp.open('POST','/iddelete',true);
     xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
     xmlhttp.send(data);
     xmlhttp.onreadystatechange=function(){
