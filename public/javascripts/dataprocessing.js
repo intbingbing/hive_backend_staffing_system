@@ -54,7 +54,7 @@ let update=function(){
     let passwordupdatevalue=document.getElementById('passwordupdatevalue').value;
     let birthdayupdatevalue=document.getElementById('birthdayupdatevalue').value;
     let data='';
-    if(isNaN(parseInt(idupdatevalue)){
+    if(isNaN(parseInt(idupdatevalue))){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
         return 0;
     }else if(nameupdatevalue||passwordupdatevalue||birthdayupdatevalue){
