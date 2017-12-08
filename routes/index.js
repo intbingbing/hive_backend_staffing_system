@@ -67,8 +67,23 @@ router.post('/update',function (req,res) {
             res.send('服务器内部错误！');
             return;
         }
-        let updateresult='ID:'+result.insertId+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
+        let updateresult='ID:'+idupdatevalue+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
         res.send(updateresult);
+    });
+})
+
+router.post('/delete',function (req,res) {
+    let iddeletevalue=req.body.id;
+    let deleteSql='DELETE FROM user where ID=?';
+    let deleteSqlArr=[iddeletevalue];
+    connection.query(deleteSql,deleteSqlArr,function (err, result) {
+        if(err){
+            console.log('[SELECT ERROR]:',err.message);
+            res.send('服务器内部错误！');
+            return;
+        }
+        let deleteresult='ID:'+idupdatevalue+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
+        res.send(deleteresult);
     });
 })
 

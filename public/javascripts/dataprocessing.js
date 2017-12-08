@@ -77,3 +77,25 @@ let update=function(){
         }
     }
 }
+
+let delete=function(){
+    let iddeletervalue=document.getElementById('iddeletervalue').value;
+    if(isNaN(parseInt(idupdatevalue))){
+        document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
+        return 0;
+    }
+    data='id='+iddeletervalue;
+    let xmlhttp=new XMLHttpRequest();
+    xmlhttp.open('POST','/delete',true);
+    xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xmlhttp.send(data);
+    xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState===4){
+            if(xmlhttp.status===200){
+                document.getElementById('deleteresult').innerHTML='【数据已删除】：'+xmlhttp.responseText+'！'
+            }else{
+                console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
+            }
+        }
+    }
+}
