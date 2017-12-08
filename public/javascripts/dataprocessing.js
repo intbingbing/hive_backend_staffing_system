@@ -57,13 +57,10 @@ let update=function(){
     if(isNaN(parseInt(idupdatevalue))){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
         return 0;
-    }else if(nameupdatevalue||passwordupdatevalue||birthdayupdatevalue){
-        data='id='+idupdatevalue;
-        nameupdatevalue.length===0?console.log('Update:name is null'):data+=('&name='+nameupdatevalue);
-        passwordupdatevalue.length===0?console.log('Update:password is null'):data+=('&password='+passwordupdatevalue);
-        birthdayupdatevalue.length===0?console.log('Update:birthday is null'):data+=('&birthday='+birthdayupdatevalue);
+    }else if(nameupdatevalue&&passwordupdatevalue&&birthdayupdatevalue){
+        data='name='+nameupdatevalue+'&'+'password='+passwordupdatevalue+'&'+'birthday='+birthdayupdatevalue;
     }else{
-        document.getElementById('updateresult').innerHTML='您没有要更新的值！';
+        document.getElementById('updateresult').innerHTML='请填写完整！';
         return 0;
     }
     let xmlhttp=new XMLHttpRequest();

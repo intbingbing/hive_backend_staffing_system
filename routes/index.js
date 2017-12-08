@@ -55,8 +55,16 @@ router.post('/addsubmit',function(req,res){
 });
 
 router.post('/update',function (req,res) {
+    let idupdatevalue=req.body.id;
+    let nameupdatevalue=req.body.name;
+    let passwordupdatevalue=req.body.password;
+    let birthdayupdatevalue=req.body.birthday;
+    let tmp='';
+    let switchname=0,switchpassword=0,switchbirthday=0;
+    let updateSqlArr=[];
+    let i=0;
     res.send(req.body);
-    // let updateSql='UPDATE user SET name = ?,url = ? WHERE Id = ?';
+    let updateSql='UPDATE user SET name = ?,url = ? WHERE Id = ?';
 })
 
 module.exports = router;
