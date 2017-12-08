@@ -48,3 +48,35 @@ let addsubmit=function(){
     }
 
 }
+
+let update(){
+    let idupdatevalue=document.getElementById('idupdatevalue').value;
+    let nameupdatevalue=document.getElementById('nameupdatevalue').value;
+    let passwordupdatevalue=document.getElementById('passwordupdatevalue').value;
+    let birthdayupdatevalue=document.getElementById('birthdayupdatevalue').value;
+    let data='';
+    if(isNaN(parseInt(idupdatevalue)){
+        document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
+        return 0;
+    }else if(nameupdatevalue||passwordupdatevalue||birthdayupdatevalue){
+        nameupdatevalue.length===0?console.log('Update:name is null'):data+=('name='+nameupdatevalue);
+        passwordupdatevalue.length===0?console.log('Update:password is null'):data+=('&password='+passwordupdatevalue);
+        birthdayupdatevalue.length===0?console.log('Update:birthday is null'):data+=('&birthday='+birthdayupdatevalue);
+    }else{
+        document.getElementById('updateresult').innerHTML='您没有要更新的值！';
+        return 0;
+    }
+    let xmlhttp=new XMLHttpRequest();
+    xmlhttp.open('POST','/update',true);
+    xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
+    xmlhttp.send(data);
+    xmlhttp.onreadystatechange=function(){
+        if(xmlhttp.readyState===4){
+            if(xmlhttp.status===200){
+                document.getElementById('updateresult').innerHTML='【数据已更新】：'+xmlhttp.responseText+'！'
+            }else{
+                console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
+            }
+        }
+    }
+}

@@ -53,6 +53,6 @@ router.post('/addsubmit',function(req,res){
         res.send(addsubmitresult);
     });
 
-})
+});
 
 module.exports = router;
