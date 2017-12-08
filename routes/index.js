@@ -52,7 +52,11 @@ router.post('/addsubmit',function(req,res){
         let addsubmitresult='ID:'+result.insertId+' Name:'+req.body.name;
         res.send(addsubmitresult);
     });
-
 });
+
+router.post('/update',function (req,res) {
+    res.send(req.body);
+    // let updateSql='UPDATE user SET name = ?,url = ? WHERE Id = ?';
+})
 
 module.exports = router;

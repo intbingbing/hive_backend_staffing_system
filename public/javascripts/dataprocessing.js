@@ -58,7 +58,8 @@ let update=function(){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
         return 0;
     }else if(nameupdatevalue||passwordupdatevalue||birthdayupdatevalue){
-        nameupdatevalue.length===0?console.log('Update:name is null'):data+=('name='+nameupdatevalue);
+        data='id='+idupdatevalue;
+        nameupdatevalue.length===0?console.log('Update:name is null'):data+=('&name='+nameupdatevalue);
         passwordupdatevalue.length===0?console.log('Update:password is null'):data+=('&password='+passwordupdatevalue);
         birthdayupdatevalue.length===0?console.log('Update:birthday is null'):data+=('&birthday='+birthdayupdatevalue);
     }else{
