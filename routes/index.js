@@ -74,6 +74,7 @@ router.post('/update',function (req,res) {
 
 router.post('/iddelete',function (req,res) {
     let iddeletevalue=req.body.id;
+    console.log(iddeletevalue);
     let deleteSql='DELETE FROM user where ID=?';
     let deleteSqlArr=[iddeletevalue];
     connection.query(deleteSql,deleteSqlArr,function (err, result) {
