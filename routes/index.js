@@ -53,7 +53,9 @@ router.post('/addsubmit',function(req,res){
         res.send(addsubmitresult);
     });
 });
-
+/**
+ * @param {{birthday:string}} data
+ */
 router.post('/update',function (req,res) {
     let idupdatevalue=req.body.id;
     let nameupdatevalue=req.body.name;
