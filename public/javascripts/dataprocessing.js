@@ -79,12 +79,12 @@ let update=function(){
 }
 
 let iddelete=function(){
-    let iddeletervalue=document.getElementById('iddeletervalue').value;
-    if(isNaN(parseInt(idupdatevalue))){
-        document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
+    let iddeletevalue=document.getElementById('iddeletevalue').value;
+    if(isNaN(parseInt(iddeletevalue))){
+        document.getElementById('iddeleteresult').innerHTML='ID未填写或格式错误！';
         return 0;
     }
-    data='id='+iddeletervalue;
+    data='id='+iddeletevalue;
     let xmlhttp=new XMLHttpRequest();
     xmlhttp.open('POST','/iddelete',true);
     xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
@@ -92,7 +92,7 @@ let iddelete=function(){
     xmlhttp.onreadystatechange=function(){
         if(xmlhttp.readyState===4){
             if(xmlhttp.status===200){
-                document.getElementById('deleteresult').innerHTML='【数据已删除】：'+xmlhttp.responseText+'！'
+                document.getElementById('iddeleteresult').innerHTML='【数据已删除】：'+xmlhttp.responseText+'！'
             }else{
                 console.log('ERROR:'+'status:'+xmlhttp.status+','+'state:'+xmlhttp.readyState);
             }
