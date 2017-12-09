@@ -59,6 +59,7 @@ router.post('/update',function (req,res) {
     let nameupdatevalue=req.body.name;
     let passwordupdatevalue=req.body.password;
     let birthdayupdatevalue=req.body.birthday;
+    console.log(birthdayupdatevalue);
     let updateSql='UPDATE user SET name = ?,password = ? ,birthday= ? WHERE ID = ?';
     let updateSqlArr=[nameupdatevalue,passwordupdatevalue,birthdayupdatevalue,idupdatevalue];
     connection.query(updateSql,updateSqlArr,function (err, result) {
@@ -74,7 +75,6 @@ router.post('/update',function (req,res) {
 
 router.post('/iddelete',function (req,res) {
     let iddeletevalue=req.body.id;
-    console.log(iddeletevalue);
     let deleteSql='DELETE FROM user where ID=?';
     let deleteSqlArr=[iddeletevalue];
     let deleteresult='';
