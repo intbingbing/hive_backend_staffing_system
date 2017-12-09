@@ -57,12 +57,32 @@ let update=function(){
     if(isNaN(parseInt(idupdatevalue))){
         document.getElementById('updateresult').innerHTML='ID未填写或格式错误！';
         return 0;
-    }else if(nameupdatevalue&&passwordupdatevalue&&birthdayupdatevalue){
-        data='id='+idupdatevalue+'&name='+nameupdatevalue+'&password='+passwordupdatevalue+'&birthday='+birthdayupdatevalue;
     }else{
-        document.getElementById('updateresult').innerHTML='请填写完整！';
-        return 0;
+        data='id='+idupdatevalue;
     }
+
+    if(!(nameupdatevalue||passwordupdatevalue||birthdayupdatevalue)){
+            document.getElementById('updateresult').innerHTML='请填写完整！';
+            return 0;
+    }
+
+    if(!(nameupdatevalue.length===0)){
+        data+=('&name='+nameupdatevalue);
+    }
+    if(!(passwordupdatevalue.length===0)){
+        data+=('&password='+passwordupdatevalue);
+    }
+    if(!(birthdayupdatevalue.length===0)){
+        data+=('&birthday='+birthdayupdatevalue);
+    }
+
+    //
+    // (nameupdatevalue&&passwordupdatevalue&&birthdayupdatevalue){
+    //     data='id='+idupdatevalue+'&name='+nameupdatevalue+'&password='+passwordupdatevalue+'&birthday='+birthdayupdatevalue;
+    // }else{
+    //     document.getElementById('updateresult').innerHTML='请填写完整！';
+    //     return 0;
+    // }
     let xmlhttp=new XMLHttpRequest();
     xmlhttp.open('POST','/update',true);
     xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');

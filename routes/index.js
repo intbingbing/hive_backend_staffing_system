@@ -61,16 +61,50 @@ router.post('/update',function (req,res) {
     let nameupdatevalue=req.body.name;
     let passwordupdatevalue=req.body.password;
     let birthdayupdatevalue=req.body.birthday;
-    console.log(birthdayupdatevalue);
-    let updateSql='UPDATE user SET name = ?,password = ? ,birthday= ? WHERE ID = ?';
-    let updateSqlArr=[nameupdatevalue,passwordupdatevalue,birthdayupdatevalue,idupdatevalue];
-    connection.query(updateSql,updateSqlArr,function (err, result) {
+    let nametmp,passwordtmp,birthdaytmp,data='';
+    let nameswitch=0,passwordswitch=0,birthdayswitch=0,varswitch=0;
+    let commacount=0;
+    if(!(nameupdatevalue===undefined)){
+        nametmp='name='+"'"+nameupdatevalue+"'";
+        nameswitch=1;
+    }
+    if(!(passwordupdatevalue===undefined)){
+        passwordtmp='password='+"'"+passwordupdatevalue+"'";
+        passwordswitch=1;
+    }
+    if(!(birthdayupdatevalue===undefined)){
+        birthdaytmp='birthday='+"'"+birthdayupdatevalue+"'";
+        birthdayswitch=1;
+    }
+
+    varswitch=nameswitch+passwordswitch+birthdayswitch;
+    commacount=varswitch-1;
+    if(nameswitch===1){
+        if(commacount===0){
+            data+=nametmp;
+        }else{
+            data+=nametmp+",";
+        }
+    }
+    if(passwordswitch===1){
+        if(commacount!==0&&birthdayswitch===1){
+            data+=nametmp+",";
+        }else{
+            data+=nametmp;
+        }
+    }
+    if(birthdayswitch===1){
+        data+=birthdaytmp;
+    }
+    let updateSql='UPDATE user SET '+data+' WHERE ID = '+idupdatevalue;
+    // let updateSqlArr=[nameupdatevalue,passwordupdatevalue,birthdayupdatevalue,idupdatevalue];
+    connection.query(updateSql,function (err, result) {
         if(err){
             console.log('[SELECT ERROR]:',err.message);
             res.send('服务器内部错误！');
             return;
         }
-        let updateresult='ID:'+idupdatevalue+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
+        let updateresult='ID:'+idupdatevalue;
         res.send(updateresult);
     });
 })
