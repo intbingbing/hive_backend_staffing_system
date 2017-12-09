@@ -72,7 +72,7 @@ router.post('/update',function (req,res) {
     });
 })
 
-router.post('/delete',function (req,res) {
+router.post('/iddelete',function (req,res) {
     let iddeletevalue=req.body.id;
     let deleteSql='DELETE FROM user where ID=?';
     let deleteSqlArr=[iddeletevalue];
