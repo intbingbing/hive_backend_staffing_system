@@ -77,13 +77,18 @@ router.post('/iddelete',function (req,res) {
     console.log(iddeletevalue);
     let deleteSql='DELETE FROM user where ID=?';
     let deleteSqlArr=[iddeletevalue];
+    let deleteresult='';
     connection.query(deleteSql,deleteSqlArr,function (err, result) {
         if(err){
             console.log('[SELECT ERROR]:',err.message);
             res.send('服务器内部错误！');
             return;
         }
-        let deleteresult='ID:'+idupdatevalue+' Name:'+nameupdatevalue+' Password:'+passwordupdatevalue+' Birthday:'+birthdayupdatevalue;
+        if(result.affectedRows===1){
+            deleteresult='已成功删除！'
+        }else{
+            deleteresult='无该ID记录，删除失败！'
+        }
         res.send(deleteresult);
     });
 })
