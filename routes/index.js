@@ -88,9 +88,9 @@ router.post('/update',function (req,res) {
     }
     if(passwordswitch===1){
         if(commacount!==0&&birthdayswitch===1){
-            data+=nametmp+",";
+            data+=passwordswitch+",";
         }else{
-            data+=nametmp;
+            data+=passwordswitch;
         }
     }
     if(birthdayswitch===1){
