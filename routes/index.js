@@ -11,6 +11,12 @@ let connection=mysql.createConnection({
     database:'test'
 });
 connection.connect();
+setInterval(function(){
+    connection.query('SELECT 1');
+},5000);
+setInterval(function(){
+    console.log(new Date().toISOString());
+},1800000);
 router.use(function(req,res,next){
     res.set({
         "Cache-Control":"no-cache",
