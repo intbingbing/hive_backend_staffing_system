@@ -23,6 +23,7 @@ router.use(function(req,res,next){
         "Pragma":"no-cache",
         "Expires":0
     });
+    console.log(' ClientIP:',request.connection.remoteAddress);
     next();
 })
 
