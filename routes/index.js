@@ -30,7 +30,7 @@ router.use(function(req,res,next){
 
 router.get('/', function(req, res) {
     let indexpath=path.resolve(__dirname, '../public/page');
-    res.type('html');
+    res.set('Content-Type', 'text/html');
     res.sendFile(indexpath+'/index.html');
 });
 // get查询
