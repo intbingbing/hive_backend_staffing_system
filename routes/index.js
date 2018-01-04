@@ -41,7 +41,7 @@ router.get('/idquery', function(req, res) {
     connection.query(idquerysqlway,function(err,result){
         if(result.length===1){
             let birthdayformat=new Date(result[0].birthday).getFullYear()+'-'+(new Date(result[0].birthday).getMonth()+1)+'-'+new Date(result[0].birthday).getDate();
-            idqueryresult={id:result[0].ID,name:result[0].name,password:result[0].password,birthday:birthdayformat};
+            idqueryresult=[{id:result[0].ID,name:result[0].name,password:result[0].password,birthday:birthdayformat}];
             return res.send(idqueryresult);
         }else{
             return res.send(idqueryresult);
