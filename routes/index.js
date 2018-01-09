@@ -113,7 +113,7 @@ router.post('/update',function (req,res) {
             res.send('服务器内部错误！');
             return;
         }
-        let updateresult='ID:'+idupdatevalue;
+        let updateresult={id:idupdatevalue};
         res.send(updateresult);
     });
 })
