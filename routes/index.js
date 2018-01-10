@@ -126,14 +126,19 @@ router.post('/iddelete',function (req,res) {
     connection.query(deleteSql,deleteSqlArr,function (err, result) {
         if(err){
             console.log('[SELECT ERROR]:',err.message);
-            res.send('服务器内部错误！');
+            res.send({errCode:500}); //500服务器内部错误
             return;
         }
         if(result.affectedRows===1){
-            deleteresult='已成功删除！'
+            deleteresult={statusCode:200}
         }else{
             deleteresult='无该ID记录，删除失败！'
-        }
+        }        
+        // if(result.affectedRows===1){
+        //     deleteresult='已成功删除！'
+        // }else{
+        //     deleteresult='无该ID记录，删除失败！'
+        // }
         res.send(deleteresult);
     });
 })
