@@ -4,6 +4,7 @@ let router = express.Router();
 let mysql=require('mysql');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
+var util = require('util');
 /* GET home page. */
 
 let connection=mysql.createConnection({
@@ -20,7 +21,7 @@ setInterval(function(){
     console.log(new Date().toISOString());
 },1800000);
 
-router.use(logger(':date :method :url :remote-addr'));
+router.use(logger('combined'));
 router.use(cookieParser());
 router.use(function(req,res,next){
     res.set({
@@ -152,6 +153,6 @@ router.post('/iddelete',function (req,res) {
 })
 
 router.post('/login',function(req,res){
-    res.send('cookies:'+req.cookies+'; body:'+req.body+';    \n'+req)
+    res.send('cookies:'+util.inspect(req.cookies)+'; req:'+util.inspect(req))
 })
 module.exports = router;
