@@ -148,8 +148,8 @@ router.post('/iddelete',function (req,res) {
     });
 })
 
-router.post('/login',function(req,res){
-    res.send('req:');
-    //res.send('req:'+util.inspect(req));
+router.get('/login',function(req,res){
+    //res.send('req:');
+    res.send('req:'+util.inspect(req));
 })
 module.exports = router;
