@@ -35,6 +35,10 @@ router.get('/', function(req, res) {
 });
 // get查询
 router.get('/idquery', function(req, res) {
+    //for(let key in req.cookies){
+    //    console.log('Cookies:  '+key+':'+req.cookies[key])
+    //}
+    //console.log('Cookie:'+req.cookies)
     let idqueryresult='未查询到数据！';
     let idqueryvalue=parseInt(req.query.id);
     let idquerysqlway='SELECT * FROM user WHERE ID='+idqueryvalue;
