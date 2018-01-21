@@ -1,9 +1,7 @@
 let express = require('express');
 let path=require('path');
 let router = express.Router();
-let mysql=require('mysql');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
+let mysql=require('mysql');\
 var util = require('util');
 /* GET home page. */
 
@@ -21,8 +19,6 @@ setInterval(function(){
     console.log(new Date().toISOString());
 },1800000);
 
-router.use(logger('combined'));
-router.use(cookieParser());
 router.use(function(req,res,next){
     res.set({
         "Cache-Control":"no-cache",
@@ -153,6 +149,6 @@ router.post('/iddelete',function (req,res) {
 })
 
 router.post('/login',function(req,res){
-    res.send('cookies:'+util.inspect(req.cookies)+'; req:'+util.inspect(req))
+    res.send('req:'+util.inspect(req))
 })
 module.exports = router;
