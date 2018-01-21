@@ -1,7 +1,7 @@
 let express = require('express');
 let path=require('path');
 let router = express.Router();
-let mysql=require('mysql');\
+let mysql=require('mysql');
 var util = require('util');
 /* GET home page. */
 
