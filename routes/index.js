@@ -2,6 +2,8 @@ let express = require('express');
 let path=require('path');
 let router = express.Router();
 let mysql=require('mysql');
+var logger = require('morgan');
+var cookieParser = require('cookie-parser');
 /* GET home page. */
 
 let connection=mysql.createConnection({
@@ -18,13 +20,15 @@ setInterval(function(){
     console.log(new Date().toISOString());
 },1800000);
 
+router.use(logger(':date :method :url :remote-addr'));
+router.use(cookieParser());
 router.use(function(req,res,next){
     res.set({
         "Cache-Control":"no-cache",
         "Pragma":"no-cache",
         "Expires":0
     });
-    console.log('ClientIP:',req.connection.remoteAddress);
+    //console.log('ClientIP:',req.connection.remoteAddress);
     next();
 })
 
@@ -147,4 +151,7 @@ router.post('/iddelete',function (req,res) {
     });
 })
 
+router.post('/login',function(req,res){
+    res.send('cookies:'+req.cookies+'; body:'+req.body+';    \n'+req)
+})
 module.exports = router;
