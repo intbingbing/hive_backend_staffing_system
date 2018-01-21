@@ -19,16 +19,6 @@ setInterval(function(){
     console.log(new Date().toISOString());
 },1800000);
 
-router.use(function(req,res,next){
-    res.set({
-        "Cache-Control":"no-cache",
-        "Pragma":"no-cache",
-        "Expires":0
-    });
-    //console.log('ClientIP:',req.connection.remoteAddress);
-    next();
-})
-
 router.get('/', function(req, res) {
     let indexpath=path.resolve(__dirname, '../public/page');
     res.set('Content-Type', 'text/html');
