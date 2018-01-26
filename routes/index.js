@@ -2,7 +2,12 @@ let express = require('express');
 let path=require('path');
 let router = express.Router();
 let mysql=require('mysql');
-var util = require('util');
+let util = require('util');
+let md5 = require('crypto-js/md5');
+let hex = require('crypto-js/enc-hex');
+//let auth = require('../public/javascripts/authCustom.js');
+//let connection = require('../public/javascripts/mysqlConnection.js');
+
 /* GET home page. */
 
 let connection=mysql.createConnection({
@@ -15,9 +20,44 @@ connection.connect();
 setInterval(function(){
     connection.query('SELECT 1');
 },5000);
-setInterval(function(){
-    console.log(new Date().toISOString());
-},1800000);
+
+// router.all('/idquery?id=checkCookie',async function(req,res){
+//     // console.log(req.path);
+//     // console.log(req.cookies);
+//     if(Object.keys(req.cookies).length===0){
+//         return res.send({statusCode:'400114',tag:0});
+//     }else{
+//         return (await auth(req.cookies.u,req.cookies.p));
+//     }
+// })
+
+function auth(username,secret){
+    console.log('auth');
+    return new Promise(function(resolve,reject){
+        let usernameSql=`SELECT secret FROM auth WHERE username='${username}'`;
+        connection.query(usernameSql,function(err,result){
+            if(result.length===1){
+                if(result[0].secret===secret) {
+                    resolve ({statusCode:'200112',tag:1});
+                }else{
+                    resolve ({statusCode:'400112',tag:0});
+                }
+            }else if(result.length===0){
+                resolve ({statusCode:'400111',tag:0});
+            }else{
+                resolve ({statusCode:'500100',tag:0});
+            }
+        });
+    })
+}
+
+router.get('/checkCookie', async function(req, res) {
+    if(Object.keys(req.cookies).length===0){
+        return res.send({statusCode:'400114',tag:0});
+    }else{
+        return res.send(await auth(req.cookies.u,req.cookies.p));
+    }
+});
 
 router.get('/', function(req, res) {
     let indexpath=path.resolve(__dirname, '../public/page');
@@ -128,7 +168,7 @@ router.post('/iddelete',function (req,res) {
             deleteresult={statusCode:200}
         }else{
             deleteresult='无该ID记录，删除失败！'
-        }        
+        }
         // if(result.affectedRows===1){
         //     deleteresult='已成功删除！'
         // }else{
@@ -138,8 +178,38 @@ router.post('/iddelete',function (req,res) {
     });
 })
 
-router.post('/login',function(req,res){
-    //res.send('req:');
-    res.send('req:'+util.inspect(req));
+router.post('/login',async function(req,res){
+    //console.log(req);
+    // let salt = 'types.ID_QUERY_ERROR';
+    // let secret = md5(password).toString(hex);
+    // secret=md5(secret).toString(hex);
+    let username = req.body.username;
+    let secret = req.body.secret;
+    let statusCodeObj=await auth(username,secret);
+    if(statusCodeObj.statusCode==='200112'){
+        res.cookie('u',username,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
+        res.cookie('p',secret,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
+        res.send(statusCodeObj);
+    }else{
+        res.send(statusCodeObj);
+    }
+    return 0;
+    // let usernameSql=`SELECT secret FROM auth WHERE username='${username}'`;
+    // connection.query(usernameSql,function(err,result){
+    //     if(result.length===1){
+    //         if(result[0].secret===secret) {
+    //             res.cookie('u',username,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
+    //             res.cookie('p',secret,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
+    //             res.send({statusCode:'200112',tag:1});
+    //         }else{
+    //             res.send({statusCode:'400112',tag:0});
+    //         }
+    //         return 0;
+    //     }else if(result.length===0){
+    //         return res.send({statusCode:'400111',tag:0});
+    //     }else{
+    //         return res.send({statusCode:'500100',tag:0});
+    //     }
+    // });
 })
 module.exports = router;
