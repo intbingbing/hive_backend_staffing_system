@@ -5,21 +5,25 @@ let mysql=require('mysql');
 let util = require('util');
 let md5 = require('crypto-js/md5');
 let hex = require('crypto-js/enc-hex');
-//let auth = require('../public/javascripts/authCustom.js');
+//兼容前期connection.query()代码
+let connection = require('../database/dbConnect');
+let { auth } = require('../src/authCustom.js');
+let { getClientIP } = require('../src/getClientIP.js');
+let fs=require('fs');
 //let connection = require('../public/javascripts/mysqlConnection.js');
 
 /* GET home page. */
 
-let connection=mysql.createConnection({
-    host:'localhost',
-    user:'root',
-    password:'',
-    database:'test'
-});
-connection.connect();
-setInterval(function(){
-    connection.query('SELECT 1');
-},5000);
+// let connection=mysql.createConnection({
+//     host:'localhost',
+//     user:'root',
+//     password:'',
+//     database:'test'
+// });
+// connection.connect();
+// setInterval(function(){
+//     connection.query('SELECT 1');
+// },5000);
 
 // router.all('/idquery?id=checkCookie',async function(req,res){
 //     // console.log(req.path);
@@ -30,33 +34,24 @@ setInterval(function(){
 //         return (await auth(req.cookies.u,req.cookies.p));
 //     }
 // })
-
-function auth(username,secret){
-    console.log('auth');
-    return new Promise(function(resolve,reject){
-        let usernameSql=`SELECT secret FROM auth WHERE username='${username}'`;
-        connection.query(usernameSql,function(err,result){
-            if(result.length===1){
-                if(result[0].secret===secret) {
-                    resolve ({statusCode:'200112',tag:1});
-                }else{
-                    resolve ({statusCode:'400112',tag:0});
-                }
-            }else if(result.length===0){
-                resolve ({statusCode:'400111',tag:0});
-            }else{
-                resolve ({statusCode:'500100',tag:0});
-            }
-        });
-    })
-}
+router.get('/test',function (req,res) {
+    res.set('content-type','image/jpeg')
+    return res.sendFile('/usr/local/nginx/html/ftp/root.jpg');
+})
 
 router.get('/checkCookie', async function(req, res) {
     if(Object.keys(req.cookies).length===0){
         return res.send({statusCode:'400114',tag:0});
     }else{
-        return res.send(await auth(req.cookies.u,req.cookies.p));
+        return res.send(await auth(req.cookies.username,req.cookies.secret));
     }
+});
+
+router.get('/clear_cookie', async function(req, res) {
+    console.log('clear_cookie');
+    res.clearCookie('username',{path:'/'});
+    res.clearCookie('secret',{path:'/'});
+    return res.send({statusCode:'200131',tag:1});
 });
 
 router.get('/', function(req, res) {
@@ -187,8 +182,9 @@ router.post('/login',async function(req,res){
     let secret = req.body.secret;
     let statusCodeObj=await auth(username,secret);
     if(statusCodeObj.statusCode==='200112'){
-        res.cookie('u',username,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
-        res.cookie('p',secret,{ maxAge: 30000 , path:'/' ,  httpOnly: true});
+        res.cookie('username',username,{ maxAge: 7200000 , path:'/' ,  httpOnly: true});
+        res.cookie('secret',secret,{ maxAge: 7200000 , path:'/' ,  httpOnly: true});
+        //console.log(statusCodeObj);
         res.send(statusCodeObj);
     }else{
         res.send(statusCodeObj);
@@ -212,4 +208,25 @@ router.post('/login',async function(req,res){
     //     }
     // });
 })
+
+router.get('/get_header_portrait',function(req,res){
+    let username=req.cookies.u;
+    let headPortraitPath=path.format({
+        root: '/',
+        dir: '/usr/local/nginx/html/ftp',
+        base: `${username}.jpg`
+    });
+    fs.stat(headPortraitPath, function (err, stat) {
+        if(err===null){
+            console.log(headPortraitPath);
+            //res.set('Content-Type','image/jpeg')
+            return res.send({statusCode:'200120',tag:1,path:headPortraitPath});
+        }else{
+            return res.send({statusCode:'400120',tag:0});
+        }
+    });
+
+})
+
+connection.release();
 module.exports = router;
