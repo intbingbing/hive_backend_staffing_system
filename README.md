@@ -1,7 +1,7 @@
-
-
 # hive_express
+
 --------------
+
 ### **简介**
 
 > - 使用express框架，前期（V1.0）主要用来给前端demo返回测试json数据和cookies管理，后期（V2.0）需求复杂了，决定后端也要优化一下，尝试各表分离。
@@ -25,10 +25,11 @@
 > > - 提供文件服务器管理不同用户头像资源 √
 
 ----------
-> - V1.0 ( Done ) 截图：
-### **login界面**
+
+### **V1.0 ( Done ) 截图：**
+#### login界面
 ![](/screen_views/login.png "login界面")
-### **create界面**
+#### create界面
 ![](/screen_views/create.png "create界面")
-### **retrieve界面**
+#### retrieve界面
 ![](/screen_views/retrieve.png "retrieve界面")
