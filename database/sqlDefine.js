@@ -9,7 +9,7 @@ var pool  = mysql.createPool($util.extend({}, $conf.mysql));
 // 向前台返回JSON方法的简单封装
 var jsonWrite = function (res, ret) {
     if ( typeof ret === 'undefined' ) {
-        res.json({ statusCode : 500 , msg : 'Server Error!' });
+        res.status(500).json({ statusCode : 500 , msg : 'Server Error!' });
     } else {
         res.json(ret);
     }
@@ -40,9 +40,14 @@ module.exports = {
             connection.query($sql.crudDelete, id, function(err, result) {
                 if(result.affectedRows === 1) {
                     result = {
-                        statusCode: 200,
-                        msg:'删除成功'
+                        statusCode: '200220',
+                        msg:'Delete Successful'
                     };
+                } else if(result.affectedRows === 0){
+                    result = {
+                        statusCode: '400221',
+                        msg:'No data found'
+                    }
                 } else {
                     result = void 0;
                 }
@@ -57,14 +62,17 @@ module.exports = {
         pool.getConnection(function(err, connection) {
             // 获取前台页面传过来的参数
             var param = req.body;
-
-            // 建立连接，向表中插入值
-            // 'INSERT INTO user(id, name, age) VALUES(0,?,?)',
+            // crudUpdate:'UPDATE `user` SET `name`=?,`password`=?,`birthday`=? WHERE `ID`=?',
             connection.query($sql.crudUpdate, [param.name, param.password,param.birthday,param.id], function(err, result) {
+                console.log(result);
+                console.log('+==================================================+');
+                console.log(err);
                 if(result) {
                     result = {
-                        statusCode: 200,
-                        msg:'更新成功'
+                        id:param.id,
+                        name:param.name,
+                        statusCode: '200220',
+                        msg:'Update Successful'
                     };
                 }
                 // 以json形式，把操作结果返回给前台页面
@@ -88,6 +96,12 @@ module.exports = {
         var id = +req.query.id; // 为了拼凑正确的sql语句，这里要转下整数
         pool.getConnection(function(err, connection) {
             connection.query($sql.crudRetrieve, id, function(err, result) {
+                if(result.length===0){
+                    result = {
+                        statusCode: '400231',
+                        msg:'No data found'
+                    }
+                }
                 jsonWrite(res, result);
                 connection.release();
             });
