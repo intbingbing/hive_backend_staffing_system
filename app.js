@@ -30,7 +30,7 @@ app.all('*', function(req, res, next) {
     res.header("Content-Type", "application/json;charset=utf-8");
     if (req.method == 'OPTIONS') {
         res.header("Access-Control-Max-Age", 86400);
-        res.sendStatus(204); //让options请求快速返回
+        res.sendStatus(204); //让options请求快速返回.
     }
     else {
         next();
