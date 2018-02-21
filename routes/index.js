@@ -59,6 +59,51 @@ router.post('/login',async function(req,res,next){
     sqlDefine.crudAuth(req,res,next);
 })
 
+//hiveReadAllEmployee
+router.get('/user/hive_all_employee',function (req,res,next) {
+    sqlDefine.hiveReadAllEmployee(req,res,next);
+})
+
+//hiveGetPost
+router.get('/user/hive_post',function (req,res,next) {
+    sqlDefine.hiveGetPost(req,res,next);
+})
+
+//hiveGetDepartment
+router.get('/user/hive_department',function (req,res,next) {
+    sqlDefine.hiveGetDepartment(req,res,next);
+})
+
+//hivePostMapDepartment
+router.get('/user/hive_post_map_department',function (req,res,next) {
+    sqlDefine.hivePostMapDepartment(req,res,next);
+})
+
+//前端需要的post、department瀑布级联表
+router.get('/user/hive_post_cascader',function (req,res,next) {
+    sqlDefine.hivePostCascader(req,res,next);
+})
+
+//更新员工信息
+router.put('/user/hive_employee',function (req,res,next) {
+    sqlDefine.hiveUpdateEmployee(req,res,next);
+})
+
+//删除员工
+router.delete('/user/hive_employee/:id',function (req,res,next) {
+    sqlDefine.hiveDeleteEmployee(req,res,next);
+})
+
+//创建员工
+router.post('/user/hive_employee',function (req,res,next) {
+    sqlDefine.hiveCreateEmployee(req,res,next);
+})
+
+//测试api
+router.get('/user/hive_test/:id',function (req,res,next) {
+    sqlDefine.hiveTest(req,res,next);
+})
+
 router.get('/get_header_portrait',function(req,res){
     let username=req.cookies.u;
     let headPortraitPath=path.format({
