@@ -2,7 +2,6 @@ let express = require('express');
 let path=require('path');
 let router = express.Router();
 let mysql=require('mysql');
-let util = require('util');
 let md5 = require('crypto-js/md5');
 let hex = require('crypto-js/enc-hex');
 //兼容前期connection.query()代码
