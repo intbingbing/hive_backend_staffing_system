@@ -193,9 +193,24 @@ module.exports = {
     //获取post和department映射表 tag1
     hivePostCascader:function (req, res, next) {
         pool.getConnection(function(err, connection) {
-            connection.query($sql.hiveGetAssociation , function(err, result) {
-                //$util.workedFormatJSonToTree()
-                console.log(result);
+            let post=department=postCascader=[];
+            connection.query($sql.hiveGetPost , function(err, result) {
+                post=result;
+            })
+            connection.query($sql.hiveGetDepartment , function(err, result) {
+                department=result;
+
+                for(let val of department){
+                    postCascader.push({value:val["department_id"],label:val["department_name"],children:[]});
+                }
+
+                for(let postVal of post){
+                    for(let cascaderVal of postCascader){
+                        if(postVal.department_id===cascaderVal.value){ //职位表的外键部门ID===瀑布表的value值（部门ID）
+                            cascaderVal.children.push({value:postVal["post_id"],label:postVal["post_name"]});
+                        }
+                    }
+                }
                 jsonWrite(res, postCascader);
                 connection.release();
             });
