@@ -84,9 +84,19 @@ router.get('/user/hive_post_cascader',function (req,res,next) {
     sqlDefine.hivePostCascader(req,res,next);
 })
 
+router.get('/user/hive_attendance/:date',function (req,res,next) {
+    //data:20180224
+    sqlDefine.hiveGetAttendanceByDay(req,res,next);
+})
+
 //更新员工信息
 router.put('/user/hive_employee',function (req,res,next) {
     sqlDefine.hiveUpdateEmployee(req,res,next);
+})
+
+//更新职位部门信息
+router.put('/user/hive_association',function (req,res,next) {
+    sqlDefine.hiveUpdateAssociation(req,res,next);
 })
 
 //删除员工
@@ -94,9 +104,19 @@ router.delete('/user/hive_employee/:id',function (req,res,next) {
     sqlDefine.hiveDeleteEmployee(req,res,next);
 })
 
+//删除职位部门
+router.delete('/user/hive_association/:id',function (req,res,next) {
+    sqlDefine.hiveDeleteAssociation(req,res,next);
+})
+
 //创建员工
 router.post('/user/hive_employee',function (req,res,next) {
     sqlDefine.hiveCreateEmployee(req,res,next);
+})
+
+//创建职位部门
+router.post('/user/hive_association',function (req,res,next) {
+    sqlDefine.hiveCreateAssociation(req,res,next);
 })
 
 //测试api

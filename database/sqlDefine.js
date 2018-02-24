@@ -130,10 +130,11 @@ module.exports = {
         });
     },
 
+    //tag3
     hiveReadAllEmployee: function (req, res, next) {
         pool.getConnection(function(err, connection) {
             connection.query($sql.hiveReadAllEmployee , function(err, result) {
-                if(result.length===0){
+                if(!result.length){
                     result = {
                         statusCode: '400231',
                         msg:'No data found'
@@ -145,36 +146,37 @@ module.exports = {
         });
     },
 
-    hiveGetPost: function (req, res, next) {
-        pool.getConnection(function(err, connection) {
-            connection.query($sql.hiveGetPost , function(err, result) {
-                if(result.length===0){
-                    result = {
-                        statusCode: '400231',
-                        msg:'No data found'
-                    }
-                }
-                jsonWrite(res, result);
-                connection.release();
-            });
-        });
-    },
+    // hiveGetPost: function (req, res, next) {
+    //     pool.getConnection(function(err, connection) {
+    //         connection.query($sql.hiveGetPost , function(err, result) {
+    //             if(result.length===0){
+    //                 result = {
+    //                     statusCode: '400231',
+    //                     msg:'No data found'
+    //                 }
+    //             }
+    //             jsonWrite(res, result);
+    //             connection.release();
+    //         });
+    //     });
+    // },
+    //
+    // hiveGetDepartment: function (req, res, next) {
+    //     pool.getConnection(function(err, connection) {
+    //         connection.query($sql.hiveGetDepartment , function(err, result) {
+    //             if(result.length===0){
+    //                 result = {
+    //                     statusCode: '400231',
+    //                     msg:'No data found'
+    //                 }
+    //             }
+    //             jsonWrite(res, result);
+    //             connection.release();
+    //         });
+    //     });
+    // },
 
-    hiveGetDepartment: function (req, res, next) {
-        pool.getConnection(function(err, connection) {
-            connection.query($sql.hiveGetDepartment , function(err, result) {
-                if(result.length===0){
-                    result = {
-                        statusCode: '400231',
-                        msg:'No data found'
-                    }
-                }
-                jsonWrite(res, result);
-                connection.release();
-            });
-        });
-    },
-
+    //tag2
     hivePostMapDepartment:function (req, res, next) {
         pool.getConnection(function(err, connection) {
             connection.query($sql.hivePostMapDepartment , function(err, result) {
@@ -193,25 +195,23 @@ module.exports = {
     //获取post和department映射表 tag1
     hivePostCascader:function (req, res, next) {
         pool.getConnection(function(err, connection) {
-            let post=department=postCascader=[];
-            connection.query($sql.hiveGetPost , function(err, result) {
-                post=result;
-            })
-            connection.query($sql.hiveGetDepartment , function(err, result) {
-                department=result;
+            connection.query($sql.hiveGetAssociation , function(err, result) {
+                result = $util.formatJsonToTree(result,"association_id","association_pid","children");
+                //console.log(tmp);
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
 
-                for(let val of department){
-                    postCascader.push({value:val["department_id"],label:val["department_name"],children:[]});
-                }
-
-                for(let postVal of post){
-                    for(let cascaderVal of postCascader){
-                        if(postVal.department_id===cascaderVal.value){ //职位表的外键部门ID===瀑布表的value值（部门ID）
-                            cascaderVal.children.push({value:postVal["post_id"],label:postVal["post_name"]});
-                        }
-                    }
-                }
-                jsonWrite(res, postCascader);
+    //按天获取打卡记录
+    hiveGetAttendanceByDay:function (req, res, next) {
+        let startData = `${(req.params.date).substr(0,4)}-${(req.params.date).substr(4,2)}-${(req.params.date).substr(6,2)} 00:00:00`;
+        let endData = `${(req.params.date).substr(0,4)}-${(req.params.date).substr(4,2)}-${(req.params.date).substr(6,2)} 23:59:59`;
+        pool.getConnection(function (err, connection) {
+            connection.query($sql.hiveGetAttendanceByDay,[startData,endData,startData,endData], function (err, result) {
+                //console.log(tmp);
+                jsonWrite(res, result);
                 connection.release();
             });
         });
@@ -220,9 +220,37 @@ module.exports = {
     //更新员工信息
     hiveUpdateEmployee:function (req, res, next) {
         let newEmpObj = req.body;
-        let newEmpArr = [newEmpObj.employee_name,newEmpObj.employee_phone,newEmpObj.employee_edu,newEmpObj.employee_professional,newEmpObj.employee_entry_time,newEmpObj.employee_salary,newEmpObj.post_id,newEmpObj.employee_work_seniority,newEmpObj.employee_identity_card_number,newEmpObj.permissions_id,newEmpObj.employee_address,newEmpObj.employee_id]
+        let newEmpArr = [newEmpObj.employee_name,newEmpObj.employee_phone,newEmpObj.employee_edu,newEmpObj.employee_professional,newEmpObj.employee_entry_time,newEmpObj.employee_salary,newEmpObj.association_id,newEmpObj.employee_work_seniority,newEmpObj.employee_identity_card_number,newEmpObj.permissions_id,newEmpObj.employee_address,newEmpObj.employee_id]
         pool.getConnection(function(err, connection) {
             connection.query($sql.hiveUpdateEmployee , newEmpArr , function(err, result) {
+                if(result.changedRows){
+                    result = {
+                        statusCode: '200220',
+                        msg:`Update is successful! [System]:${result.message}`
+                    }
+                }else if(result.affectedRows){
+                    result = {
+                        statusCode: '400221',
+                        msg:`No value to be updated! [System]:${result.message}`
+                    }
+                }else{
+                    result = {
+                        statusCode: '400231',
+                        msg:`No data found! [System]:${result.message}`
+                    }
+                }
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
+
+    //更新职位部门信息
+    hiveUpdateAssociation:function (req, res, next) {
+        let newAssObj = req.body;
+        newAssObj = [newAssObj.association_name,newAssObj.association_is_department,newAssObj.association_pid,newAssObj.association_id]
+        pool.getConnection(function(err, connection) {
+            connection.query($sql.hiveUpdateAssociation , newAssObj , function(err, result) {
                 if(result.changedRows){
                     result = {
                         statusCode: '200220',
@@ -267,10 +295,32 @@ module.exports = {
         });
     },
 
+    //删除职位部门信息
+    hiveDeleteAssociation:function (req, res, next) {
+        let id = [+req.params.id] ;
+        pool.getConnection(function(err, connection) {
+            connection.query($sql.hiveDeleteAssociation , id , function(err, result) {
+                if(result.affectedRows){
+                    result = {
+                        statusCode: '200240',
+                        msg:`Delete is successful! [System]:${result.message}`
+                    }
+                }else if(result.affectedRows===0){
+                    result = {
+                        statusCode: '400241',
+                        msg:`No data found! [System]:${result.message}`
+                    }
+                }
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
+
     //创建员工
     hiveCreateEmployee:function (req, res, next) {
         let tmp = req.body;
-        let newEmpArr = [tmp.employee_name,tmp.employee_phone,tmp.employee_edu,tmp.employee_professional,tmp.employee_entry_time,tmp.employee_salary,tmp.post_id,tmp.employee_work_seniority,tmp.employee_identity_card_number,tmp.permissions_id,tmp.employee_address]
+        let newEmpArr = [tmp.employee_name,tmp.employee_phone,tmp.employee_edu,tmp.employee_professional,tmp.employee_entry_time,tmp.employee_salary,tmp.association_id,tmp.employee_work_seniority,tmp.employee_identity_card_number,tmp.permissions_id,tmp.employee_address]
         pool.getConnection(function(err, connection) {
             connection.query($sql.hiveCreateEmployee , newEmpArr , function(err, result) {
                 if(result){
@@ -279,6 +329,27 @@ module.exports = {
                         msg:`Create is successful! [System]:${result.message}`,
                         data:{
                             employee_id:result.insertId
+                        }
+                    }
+                }
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
+
+    //创建职位部门
+    hiveCreateAssociation:function (req, res, next) {
+        let tmp = req.body;
+        let newAssArr = [tmp.association_name,tmp.association_is_department,tmp.association_pid]
+        pool.getConnection(function(err, connection) {
+            connection.query($sql.hiveCreateAssociation , newAssArr , function(err, result) {
+                if(result){
+                    result = {
+                        statusCode: '200210',
+                        msg:`Create is successful! [System]:${result.message}`,
+                        data:{
+                            association_id:result.insertId
                         }
                     }
                 }
