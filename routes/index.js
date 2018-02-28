@@ -89,6 +89,18 @@ router.get('/user/hive_attendance/:date',function (req,res,next) {
     sqlDefine.hiveGetAttendanceByDay(req,res,next);
 })
 
+/*
+* param: { Date } 20180224
+* return:出勤率，准时到岗率，准时离岗率
+* */
+router.get('/user/hive_clock_in/:date',function (req,res,next) {
+    sqlDefine.hiveGetClockInByDay(req,res,next);
+})
+
+router.get('/user/hive_clock_in_department/:date',function (req,res,next) {
+    sqlDefine.hiveGetAttendanceByDepartment(req,res,next);
+})
+
 //更新员工信息
 router.put('/user/hive_employee',function (req,res,next) {
     sqlDefine.hiveUpdateEmployee(req,res,next);
