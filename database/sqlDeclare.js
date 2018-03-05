@@ -28,7 +28,15 @@ var crud={
     on em.permissions_id=per.permissions_id and em.association_id=po.association_id  group by department_id`,
     //当天打卡计数，部门分组（包括迟到早退）
     hiveCountAttendanceBydepartment:function () {
-        return `select department_id,department_name,count(department_id) clock_in_count from (${this.hiveGetAttendanceByDay}) as alias group by department_id `
+        return `select department_id,department_name,count(department_id) clock_in_count from (${this.hiveGetAttendanceByDay()}) as alias group by department_id `
+    },
+    //当天上午准时打卡计数，部门分组
+    hiveGetJointClockInCount:function () {
+        return `select department_id,department_name,count(department_id) clock_in_count from (${this.hiveGetJointClockIn()}) as alias group by department_id `
+    },
+    //当天下午准时打卡计数，部门分组
+    hiveGetJointClockOutCount:function () {
+        return `select department_id,department_name,count(department_id) clock_out_count from (${this.hiveGetJointClockOut()}) as alias group by department_id `
     },
     //获取职位表
     //hiveGetPost:'select * from post;',
@@ -38,11 +46,25 @@ var crud={
     //replace=>association表自连接 tag1
     hiveGetAssociation:'select * from association',
     //获取打卡记录
-    hiveGetAttendanceByDay:`select em.employee_id,em.employee_name,em.association_id,ass.association_pid as department_id, ass.association_name,ass.parent_name as department_name,at.attendance_id,at.attendance_am,at.attendance_pm
-    from employee as em inner join (select p.association_id,p.association_name,p.association_pid,p.association_is_department,c.association_name as parent_name ,c.association_id as parent_id
-    from association as p left join association as c on p.association_pid=c.association_id) as ass inner join attendance as at 
-    on em.employee_id=at.employee_id and em.association_id=ass.association_id 
-    where ( attendance_am > ? and attendance_am < ?) or ( attendance_pm > ? and attendance_pm < ?)`,
+    hiveGetAttendanceByDay:function () {
+        return `${this.hiveGetJointClockIn()} or ( attendance_pm > ? and attendance_pm < ?)`
+    },
+    /*
+    params:[startTime,endTime]
+    获取上午规定时间打卡记录 联合表详细信息（部门）
+    */
+    hiveGetJointClockIn:function () {
+        return `select em.employee_id,em.employee_name,em.association_id,ass.association_pid as department_id, ass.association_name,ass.parent_name as department_name,at.attendance_id,at.attendance_am,at.attendance_pm 
+        from employee as em inner join (${this.hivePostMapDepartment}) as ass inner join attendance as at
+        on em.employee_id=at.employee_id and em.association_id=ass.association_id 
+        where ( attendance_am > ? and attendance_am < ?) `
+    },
+    hiveGetJointClockOut:function () {
+        return `select em.employee_id,em.employee_name,em.association_id,ass.association_pid as department_id, ass.association_name,ass.parent_name as department_name,at.attendance_id,at.attendance_am,at.attendance_pm 
+        from employee as em inner join (${this.hivePostMapDepartment}) as ass inner join attendance as at
+        on em.employee_id=at.employee_id and em.association_id=ass.association_id 
+        where ( attendance_pm > ? and attendance_pm < ?) `
+    },
     hiveGetEmployeeCount:'select count(*) as employee_count from employee',
     // ? ? :开始时间 结束时间
     hiveGetClockInByDayCount:'select count(*) as clock_in_count from attendance as at where at.attendance_am > ? and at.attendance_pm < ?',

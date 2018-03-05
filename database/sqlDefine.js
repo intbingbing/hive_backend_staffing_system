@@ -2,18 +2,19 @@
 let mysql=require('mysql');
 let $conf=require('../conf/db.js');
 let $util=require('../util/util.js');
+let jsonWrite=$util.jsonWrite;
 let $sql=require('./sqlDeclare.js');
 // 使用连接池，提升性能
 let pool  = mysql.createPool($util.extend({}, $conf.mysql));
 
 // 向前台返回JSON方法的简单封装
-let jsonWrite = function (res, ret) {
-    if ( typeof ret === 'undefined' ) {
-        res.status(500).json({ statusCode : 500 , msg : 'Server Error!' });
-    } else {
-        res.json(ret);
-    }
-};
+// let jsonWrite = function (res, ret) {
+//     if ( typeof ret === 'undefined' ) {
+//         res.status(500).json({ statusCode : 500 , msg : 'Server Error!' });
+//     } else {
+//         res.json(ret);
+//     }
+// };
 
 module.exports = {
     //增加商品
@@ -204,7 +205,7 @@ module.exports = {
         });
     },
 
-    //按天获取打卡记录
+    //按天获取所有员工打卡记录
     hiveGetAttendanceByDay:function (req, res, next) {
         if(isNaN(parseInt(req.params.date))||req.params.date.length!==8){
             let result = {
@@ -218,8 +219,7 @@ module.exports = {
         let startData = `${formatData} 00:00:00`;
         let endData = `${formatData} 23:59:59`;
         pool.getConnection(function (err, connection) {
-            connection.query($sql.hiveGetAttendanceByDay+';',[startData,endData,startData,endData], function (err, result) {
-                //console.log(tmp);
+            connection.query($sql.hiveGetAttendanceByDay()+';',[startData,endData,startData,endData], function (err, result) {
                 jsonWrite(res, result);
                 connection.release();
             });
@@ -244,10 +244,12 @@ module.exports = {
         let endData = `${formatData} 23:59:59`;
         let clockInData = `${formatData} 09:00:00`;
         let clockOutData = `${formatData} 18:00:00`;
-        let employee_count = '';
-        let employee_count_group_department = [];//部门人数
+        let employee_count = '';//员工总数
+        let employee_count_group_department = [];//各部门人数 ObjectArray
         let employee_count_group_department_attendance = [];//部门的打卡记录人数
         let attendance_rate_group_department_arr = [];//部门到岗率result
+        let clock_in_count_punctuality_group_department = [];//部门的准时上班打卡记录人数
+        let clock_out_count_punctuality_group_department = [];//部门的准时下班打卡记录人数
         let clock_in_count_sum = '';
         let clock_in_count_punctuality = '';
         let clock_out_count_punctuality = '';
@@ -268,20 +270,57 @@ module.exports = {
             connection.query($sql.hiveCountAttendanceBydepartment(),[startData,endData,startData,endData], function (err, result) {
                 //当天所有打卡记录，包括迟到早退
                 employee_count_group_department_attendance = result;
+                //console.log($sql.hiveCountAttendanceBydepartment())
                 //计算到岗率
                 for(let departmentVal of employee_count_group_department){
                     for(let attendanceVal of employee_count_group_department_attendance){
                         if(departmentVal.department_id===attendanceVal.department_id){
-                            departmentVal.clock_in_count = attendanceVal.clock_in_count;
-                            departmentVal.attendance_rate = departmentVal.clock_in_count/departmentVal.department_count;
-                            attendance_rate_group_department_arr.push(departmentVal)
+                            departmentVal.attendance_count = attendanceVal.clock_in_count;
+                            departmentVal.attendance_rate = departmentVal.attendance_count/departmentVal.department_count;
+                            //attendance_rate_group_department_arr.push(departmentVal)
                         }
                     }
                 }
-                result = attendance_rate_group_department_arr;
+                // result = attendance_rate_group_department_arr;
+                // jsonWrite(res, result);
+                // connection.release();
+            });
+            connection.query($sql.hiveGetJointClockInCount(),[startData,clockInData], function (err, result) {
+                //准时上班计数By group department;
+                //计算准时上班率
+                //console.log(result)
+                clock_in_count_punctuality_group_department = result;
+                for(let departmentVal of employee_count_group_department){
+                    for(let clockInVal of clock_in_count_punctuality_group_department){
+                        if(departmentVal.department_id===clockInVal.department_id){
+                            departmentVal.clock_in_count = clockInVal.clock_in_count;
+                            departmentVal.clock_in_rate = departmentVal.clock_in_count/departmentVal.department_count;
+                            //attendance_rate_group_department_arr.push(departmentVal)
+                        }
+                    }
+                }
+            });
+
+            connection.query($sql.hiveGetJointClockOutCount(),[clockOutData,endData], function (err, result) {
+                //准时下班计数By group department;
+                //计算准时下班率
+                //console.log(result)
+                clock_out_count_punctuality_group_department = result;
+                for(let departmentVal of employee_count_group_department){
+                    for(let clockOutVal of clock_out_count_punctuality_group_department){
+                        if(departmentVal.department_id===clockOutVal.department_id){
+                            departmentVal.clock_out_count = clockOutVal.clock_out_count;
+                            departmentVal.clock_out_rate = departmentVal.clock_out_count/departmentVal.department_count;
+                            departmentVal.date=formatData;
+                            //attendance_rate_group_department_arr.push(departmentVal)
+                        }
+                    }
+                }
+                result = employee_count_group_department ;
                 jsonWrite(res, result);
                 connection.release();
             });
+
         });
     },
 

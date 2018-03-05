@@ -59,8 +59,32 @@ module.exports = {
         }
         traverse(id);
         return result;
-    }
+    },
 
+    //简单封装
+    jsonWrite : function (res, ret) {
+        if ( typeof ret === 'undefined' ) {
+            res.status(500).json({ statusCode : 500 , msg : 'Server Error!' });
+        } else {
+            res.json(ret);
+        }
+    },
+    /*
+* param date:{ Date },日期
+* param options:{ none | 'number'} none:2018-01-01 number:20180101
+* return String
+* */
+    getDetailedTime:function(){
+        let date=new Date();
+        let year = date.getFullYear();
+        let month = date.getMonth()+1;
+        let day = date.getDate();
+        let hour = date.getHours();
+        let minute = date.getMinutes();
+        let second = date.getSeconds();
+        let millisecond = date.getMilliseconds();
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}:${millisecond}`
+    }
     //let result=[]
 
     // defaultCascaderArr:function (id,mapData) {

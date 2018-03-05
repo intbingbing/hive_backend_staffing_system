@@ -2,13 +2,26 @@ let express = require('express');
 let path=require('path');
 let router = express.Router();
 let mysql=require('mysql');
-let util = require('util');
+let jsonWrite=require('../util/util.js').jsonWrite;
 let md5 = require('crypto-js/md5');
 let hex = require('crypto-js/enc-hex');
+var multer  = require('multer')
 //兼容前期connection.query()代码
 let { auth } = require('../src/authCustom.js');
 let fs=require('fs');
 let sqlDefine = require('../database/sqlDefine.js')
+
+//上传文件
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '/usr/local/nginx/html/ftp/upload')
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now()+'_'+file.originalname);
+    }
+})
+
+var upload = multer({ storage: storage })
 
 router.get('/test',function (req,res) {
     res.set('content-type','image/jpeg')
@@ -84,6 +97,7 @@ router.get('/user/hive_post_cascader',function (req,res,next) {
     sqlDefine.hivePostCascader(req,res,next);
 })
 
+////按天获取所有员工打卡记录
 router.get('/user/hive_attendance/:date',function (req,res,next) {
     //data:20180224
     sqlDefine.hiveGetAttendanceByDay(req,res,next);
@@ -97,9 +111,30 @@ router.get('/user/hive_clock_in/:date',function (req,res,next) {
     sqlDefine.hiveGetClockInByDay(req,res,next);
 })
 
+/*
+* param: { Date } 20180224
+* return:出勤率，准时到岗率，准时离岗率,group by department
+* */
 router.get('/user/hive_clock_in_department/:date',function (req,res,next) {
     sqlDefine.hiveGetAttendanceByDepartment(req,res,next);
 })
+
+
+//获取部门文件列表
+router.get('/user/hive_department_file_list',function(req,res,next){
+    //console.log(req.file)
+    fs.readdir('/usr/local/nginx/html/ftp/upload',function(err,files){
+        if(files){
+            let tmp=[];
+            for(let val of files){
+                tmp.push({name:val,url:`http://122.112.210.98/ftp/upload/${val}`,originalname:val.substring(val.indexOf('_')+1)});
+            }
+            return jsonWrite(res,tmp) //列表数组
+        }else{
+            return jsonWrite(res,{code:'500110',msg:err})
+        }
+    })
+});
 
 //更新员工信息
 router.put('/user/hive_employee',function (req,res,next) {
@@ -109,6 +144,18 @@ router.put('/user/hive_employee',function (req,res,next) {
 //更新职位部门信息
 router.put('/user/hive_association',function (req,res,next) {
     sqlDefine.hiveUpdateAssociation(req,res,next);
+})
+
+//重命名文件
+router.put('/user/hive_department_file',function (req,res,next) {
+    //fs.rename(oldPath, newPath, callback)
+    fs.rename(`/usr/local/nginx/html/ftp/upload/${req.body.oldPath}`, `/usr/local/nginx/html/ftp/upload/${Date.now()}_${req.body.newPath}`, function(err){
+        if(!err){
+            return jsonWrite(res,{code:'200220',msg:'rename is OK'})
+        }else{
+            return jsonWrite(res,{code:'400220',msg:'rename is failed'})
+        }
+    })
 })
 
 //删除员工
@@ -121,6 +168,16 @@ router.delete('/user/hive_association/:id',function (req,res,next) {
     sqlDefine.hiveDeleteAssociation(req,res,next);
 })
 
+router.delete('/user/hive_department_file/:name',function (req,res,next) {
+    fs.unlink(`/usr/local/nginx/html/ftp/upload/${req.params.name}`,function(error){
+        if(!error){
+            return jsonWrite(res,{code:'200240',msg:'delete is OK'})
+        }else{
+            return jsonWrite(res,{code:'400240',msg:`error:${error}`})
+        }
+    })
+})
+
 //创建员工
 router.post('/user/hive_employee',function (req,res,next) {
     sqlDefine.hiveCreateEmployee(req,res,next);
@@ -130,6 +187,13 @@ router.post('/user/hive_employee',function (req,res,next) {
 router.post('/user/hive_association',function (req,res,next) {
     sqlDefine.hiveCreateAssociation(req,res,next);
 })
+
+//上传部门文件
+router.post('/user/hive_department_file',upload.single("file"),function(req,res,next){
+    //console.log(req.file)
+    return jsonWrite(res,{code:'200210',msg:'ok'})
+});
+
 
 //测试api
 router.get('/user/hive_test/:id',function (req,res,next) {
