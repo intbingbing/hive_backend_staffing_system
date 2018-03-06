@@ -82,8 +82,8 @@ module.exports = {
         let hour = date.getHours();
         let minute = date.getMinutes();
         let second = date.getSeconds();
-        let millisecond = date.getMilliseconds();
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}:${millisecond}`
+        //let millisecond = date.getMilliseconds();
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`
     }
     //let result=[]
 

@@ -119,6 +119,9 @@ router.get('/user/hive_clock_in_department/:date',function (req,res,next) {
     sqlDefine.hiveGetAttendanceByDepartment(req,res,next);
 })
 
+router.get('/user/hive_notice',function (req,res,next) {
+    sqlDefine.hiveGetNotice(req,res,next);
+})
 
 //获取部门文件列表
 router.get('/user/hive_department_file_list',function(req,res,next){
@@ -194,6 +197,11 @@ router.post('/user/hive_department_file',upload.single("file"),function(req,res,
     return jsonWrite(res,{code:'200210',msg:'ok'})
 });
 
+//增加公告记录
+router.post('/user/hive_notice',function(req,res,next){
+    //console.log(req.file)
+    sqlDefine.hiveCreateNotice(req,res,next);
+});
 
 //测试api
 router.get('/user/hive_test/:id',function (req,res,next) {

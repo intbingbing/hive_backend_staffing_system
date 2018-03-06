@@ -9,7 +9,7 @@ var crud={
     crudAll: 'select * from user',
     crudRetrieve: 'select * from user where ID=?',
     //auth
-    crudAuth:'SELECT secret FROM auth WHERE username=?',
+    crudAuth:'SELECT * FROM auth WHERE username=?',
     //department,post,employee,permissions三个表笛卡尔积 tag3
     //hiveReadAllEmployee:'select * from department,post,employee,permissions where department.department_id=post.department_id and post.post_id=employee.post_id and employee.permissions_id=permissions.permissions_id ORDER BY employee_id ASC;',
     hiveReadAllEmployee:`select * from employee as em inner join permissions as per 
@@ -82,6 +82,10 @@ var crud={
     hiveCreateEmployee:'INSERT INTO `employee` (`employee_name`,`employee_phone`,`employee_edu`,`employee_professional`,`employee_entry_time`,`employee_salary`,`association_id`,`employee_work_seniority`,`employee_identity_card_number`,`permissions_id`,`employee_address`) VALUES(?,?,?,?,?,?,?,?,?,?,?)',
     //创建职位部门
     hiveCreateAssociation:'INSERT INTO `association` (`association_name`,`association_is_department`,`association_pid`) VALUES(?,?,?)',
+    //查公告
+    hiveGetNotice:'select * from notice',
+    //创建公告
+    hiveCreateNotice:'INSERT INTO `notice` (`notice_title`,`notice_type`,`notice_text`,`notice_date`,`employee_id`) VALUES(?,?,?,?,?)',
 
     //test
     hiveTest:'select * from department_copy ORDER BY department_id ASC',

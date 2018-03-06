@@ -114,7 +114,7 @@ module.exports = {
                         if(result[0].secret===secret) {
                             res.cookie('username',username,{ maxAge: 7200000 , path:'/' ,  httpOnly: true});
                             res.cookie('secret',secret,{ maxAge: 7200000 , path:'/' ,  httpOnly: true});
-                            res.send({statusCode:'200112',tag:1,username});
+                            res.send({statusCode:'200112',tag:1,username,employee_id:result[0].employee_id,auth_id:result[0].id});
                         }else{
                             res.send({statusCode:'400112',tag:0});
                         }
@@ -374,6 +374,15 @@ module.exports = {
         });
     },
 
+    hiveGetNotice:function (req, res, next) {
+        pool.getConnection(function (err, connection) {
+            connection.query($sql.hiveGetNotice+';' ,function (err, result) {
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
+
     //更新员工信息
     hiveUpdateEmployee:function (req, res, next) {
         let newEmpObj = req.body;
@@ -507,6 +516,26 @@ module.exports = {
                         msg:`Create is successful! [System]:${result.message}`,
                         data:{
                             association_id:result.insertId
+                        }
+                    }
+                }
+                jsonWrite(res, result);
+                connection.release();
+            });
+        });
+    },
+
+    hiveCreateNotice:function (req, res, next) {
+        let tmp = req.body;
+        let newNotArr = [tmp.notice_title,tmp.notice_type,tmp.notice_text,$util.getDetailedTime(tmp.notice_date),tmp.employee_id,]
+        pool.getConnection(function(err, connection) {
+            connection.query($sql.hiveCreateNotice +';', newNotArr , function(err, result) {
+                if(result){
+                    result = {
+                        code: '200210',
+                        msg:`Create is successful! [System]:${result.message}`,
+                        data:{
+                            notice_id:result.insertId
                         }
                     }
                 }
