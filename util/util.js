@@ -12,6 +12,12 @@ module.exports = {
         date=new Date(date);
         return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
     },
+    getClientIP:function (req) {
+        return req.headers['x-forwarded-for'] ||
+            req.connection.remoteAddress ||
+            req.socket.remoteAddress ||
+            req.connection.socket.remoteAddress;
+    },
     /*
     * json格式转树状结构
     * @param   {json}      json数据

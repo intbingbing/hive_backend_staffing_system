@@ -6,10 +6,12 @@ let jsonWrite=require('../util/util.js').jsonWrite;
 let md5 = require('crypto-js/md5');
 let hex = require('crypto-js/enc-hex');
 var multer  = require('multer')
+var request  = require('request')
 //兼容前期connection.query()代码
 let { auth } = require('../src/authCustom.js');
 let fs=require('fs');
 let sqlDefine = require('../database/sqlDefine.js')
+let $util=require('../util/util.js');
 
 //上传文件
 var storage = multer.diskStorage({
@@ -27,6 +29,19 @@ router.get('/test',function (req,res) {
     res.set('content-type','image/jpeg')
     return res.sendFile('/usr/local/nginx/html/ftp/root.jpg');
 })
+
+router.get('/api/proxy/weather', function(req,res,next) {
+    let ip = $util.getClientIP(req).substr($util.getClientIP(req).lastIndexOf(':')+1);
+    request(`https://api.seniverse.com/v3/weather/now.json?key=gf9evlzmq0whaes9&location=${ip}&language=zh-Hans&unit=c`,(error, response, body)=>{
+        if(body){
+            body = JSON.parse(body);
+            return jsonWrite(res,body.results[0])
+        }
+        if(error){
+            return jsonWrite(res,{code:'600110',msg:error})
+        }
+    })
+});
 
 router.get('/checkCookie', function(req,res,next) {
     if(Object.keys(req.cookies).length===0){
